@@ -9,10 +9,14 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from functools import wraps
+import os
+from dotenv import load_dotenv
+
+load_dotenv("C:/Users/hp/Desktop/MY_SECRETS.env.txt")
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.getenv("app_secret_key")
 ckeditor = CKEditor(app)
 Bootstrap(app)
 gravatar = Gravatar(app,
