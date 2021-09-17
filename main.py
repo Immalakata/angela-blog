@@ -12,7 +12,8 @@ from functools import wraps
 import os
 from dotenv import load_dotenv
 
-load_dotenv("C:/Users/hp/Desktop/MY_SECRETS.env.txt")
+
+load_dotenv(".env")
 
 
 app = Flask(__name__)
@@ -31,7 +32,9 @@ gravatar = Gravatar(app,
 
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+# if working locally, testing or debugging...Database url = "DATABASE_URL"
+DB_URL = os.getenv("HEROKU_POSTGRESQL_BLUE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -78,6 +81,11 @@ class Comment(db.Model):
     comment_author = relationship("BlogUser", back_populates="comments")
     text = db.Column(db.Text, nullable=False)
 # db.create_all()
+# create db if file doesn't exist.
+
+
+if not os.path.isfile(DB_URL):
+    db.create_all()
 
 
 def admin_only(function):
